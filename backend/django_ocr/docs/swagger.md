@@ -9,6 +9,24 @@ title: django-ocr v1.0.0
 
 # ocr_record
 
+## GET Ocr 解析记录-单个
+
+GET /api/ocr_record/{id}/
+
+### 请求参数
+
+|名称|位置|类型|必选|说明|
+|---|---|---|---|---|
+|id|path|string|true|none|
+
+> 返回示例
+
+### 返回结果
+
+|状态码|状态码含义|说明|数据模型|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|[OcrRecordDisplaySer](#schemaocrrecorddisplayser)|
+
 ## GET Ocr 解析记录-列表
 
 GET /api/ocr_record/
@@ -50,25 +68,7 @@ GET /api/ocr_record/
 |»» created_at|string(date-time)|false|read-only|none|
 |»» image_md5|string|true|none|长度为 32 的小写字母、数字|
 |»» image_size|integer|true|none|单位为 B|
-|»» content|object|true|none|none|
-
-## GET Ocr 解析记录-单个
-
-GET /api/ocr_record/{id}/
-
-### 请求参数
-
-|名称|位置|类型|必选|说明|
-|---|---|---|---|---|
-|id|path|string|true|none|
-
-> 返回示例
-
-### 返回结果
-
-|状态码|状态码含义|说明|数据模型|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|[OcrRecordDisplaySer](#schemaocrrecorddisplayser)|
+|»» content|[string]|true|none|识别结果|
 
 ## POST 解析图片中的字母
 
@@ -103,6 +103,41 @@ required:
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|[OcrParseLetterResSer](#schemaocrparseletterresser)|
 
 # 数据模型
+
+<h2 id="tocS_OcrParseLetterResSer">OcrParseLetterResSer</h2>
+<!-- backwards compatibility -->
+<a id="schemaocrparseletterresser"></a>
+<a id="schema_OcrParseLetterResSer"></a>
+<a id="tocSocrparseletterresser"></a>
+<a id="tocsocrparseletterresser"></a>
+
+```json
+{
+  "required": [
+    "content"
+  ],
+  "type": "object",
+  "properties": {
+    "content": {
+      "description": "解析图片得到的字母列表",
+      "type": "array",
+      "items": {
+        "description": "字母",
+        "type": "string",
+        "maxLength": 1,
+        "minLength": 1
+      }
+    }
+  }
+}
+
+```
+
+### 属性
+
+|名称|类型|必选|约束|说明|
+|---|---|---|---|---|
+|content|[string]|true|none|解析图片得到的字母列表|
 
 <h2 id="tocS_OcrRecordDisplaySer">OcrRecordDisplaySer</h2>
 <!-- backwards compatibility -->
@@ -144,8 +179,12 @@ required:
       "type": "integer"
     },
     "content": {
-      "title": "识别结果",
-      "type": "object"
+      "description": "识别结果",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     }
   }
 }
@@ -160,40 +199,5 @@ required:
 |created_at|string(date-time)|false|read-only|none|
 |image_md5|string|true|none|长度为 32 的小写字母、数字|
 |image_size|integer|true|none|单位为 B|
-|content|object|true|none|none|
-
-<h2 id="tocS_OcrParseLetterResSer">OcrParseLetterResSer</h2>
-<!-- backwards compatibility -->
-<a id="schemaocrparseletterresser"></a>
-<a id="schema_OcrParseLetterResSer"></a>
-<a id="tocSocrparseletterresser"></a>
-<a id="tocsocrparseletterresser"></a>
-
-```json
-{
-  "required": [
-    "content"
-  ],
-  "type": "object",
-  "properties": {
-    "content": {
-      "description": "解析图片得到的字母列表",
-      "type": "array",
-      "items": {
-        "description": "字母",
-        "type": "string",
-        "maxLength": 1,
-        "minLength": 1
-      }
-    }
-  }
-}
-
-```
-
-### 属性
-
-|名称|类型|必选|约束|说明|
-|---|---|---|---|---|
-|content|[string]|true|none|解析图片得到的字母列表|
+|content|[string]|true|none|识别结果|
 

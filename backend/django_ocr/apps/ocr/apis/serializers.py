@@ -15,6 +15,11 @@ class OcrParseLetterResSer(serializers.Serializer):
 
 
 class OcrRecordDisplaySer(serializers.ModelSerializer):
+    content = serializers.ListSerializer(
+        child=serializers.CharField(),
+        help_text='识别结果',
+    )
+
     class Meta:
         model = OcrRecord
         fields = ['id', 'created_at', 'image_md5', 'image_size', 'content']
