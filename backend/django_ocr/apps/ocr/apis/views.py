@@ -8,9 +8,13 @@ from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 
 from contrib.drf.viewsets import SerializerMixin
-from ocr.apis.serializers import OcrParseLetterReqSer
+from ocr.apis.serializers import (
+    OcrParseLetterReqSer,
+    OcrRecordDisplaySer,
+)
 from ocr.models import OcrRecord
 from services.ocr.tesseract import TesseractOcrService
+from .filters import OcrRecordFilter
 from .schemas import OcrRecordSchema
 
 
@@ -22,14 +26,27 @@ class OcrRecordViewSet(
     viewsets.GenericViewSet,
 ):
     serializer_classes = {
+        'default': OcrRecordDisplaySer,
         'parse_letter': OcrParseLetterReqSer,
     }
+    filterset_class = OcrRecordFilter
+    queryset = OcrRecord.objects.all()
+    search_fields = []
+    ordering = '-id'
     form_actions = {'parse_letter'}
 
     def get_parsers(self):
         if getattr(self, 'action', None) in self.form_actions:
             return [parsers.FormParser(), parsers.MultiPartParser()]
         return super().get_parsers()
+
+    @OcrRecordSchema.retrieve()
+    def retrieve(self, *args, **kwargs):
+        return super().retrieve(*args, **kwargs)
+
+    @OcrRecordSchema.list()
+    def list(self, *args, **kwargs):
+        return super().list(*args, **kwargs)
 
     @OcrRecordSchema.parse_letter()
     @action(detail=False, methods=['POST'], url_name='parse_letter')

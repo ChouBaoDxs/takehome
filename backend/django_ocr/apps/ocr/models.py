@@ -5,7 +5,7 @@ from contrib.models import ReadOnlyModel
 
 class OcrRecord(ReadOnlyModel):
     image_md5 = models.CharField('图片的md5', max_length=32, help_text='长度为 32 的小写字母、数字')
-    image_size = models.PositiveBigIntegerField('图片的大小')
+    image_size = models.PositiveBigIntegerField('图片的大小', help_text='单位为 B')
     content = models.JSONField('识别结果')
 
     class Meta:
