@@ -1,0 +1,16 @@
+FROM python:3.8.6-slim
+MAINTAINER ChouBaoDxs <choubaodxs@qq.com>
+
+# apt-get install
+RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list \
+    && sed -i 's/security.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get install -y tesseract-ocr libffi-dev default-mysql-client default-libmysqlclient-dev gcc cmake \
+    && apt-get clean
+
+# install requirements.txt
+COPY ./requirements.txt ./requirements.txt
+RUN pip install --upgrade pip==20.2.4 setuptools==49.6.0 wheel==0.34.2 \
+    && pip install -r requirements.txt --no-cache-dir --timeout 300 -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+# build example: docker build -f DockerfileBaseImage -t choubaodxs/django-ocr-base-image:v1.0 .
