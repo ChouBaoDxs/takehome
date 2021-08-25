@@ -17,4 +17,10 @@ class OcrRecordViewSetTestCase(APITestCase):
             resp = self.client.post(url, data=data, format='multipart')
             self.assertEqual(resp.status_code, status.HTTP_200_OK)
             self.assertTrue('content' in resp.data)
-            self.assertTrue(len(resp.data['content']) > 0)
+            content = resp.data['content']
+            self.assertTrue(len(content) > 0)
+
+        list_url = reverse('api_routers:ocr_record-list')
+        list_resp_data = self.client.get(list_url).data
+        results: list = list_resp_data['results']
+        self.assertEqual(results[0]['content'], content)
