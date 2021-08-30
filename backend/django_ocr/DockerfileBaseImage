@@ -6,7 +6,7 @@ RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list \
     && sed -i 's/security.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list \
     && apt-get update \
     && apt-get install -y tesseract-ocr libffi-dev default-mysql-client default-libmysqlclient-dev gcc cmake \
-    && apt-get clean
+    && apt-get clean -y && rm -rf /var/lib/apt/lists/ && apt-get autoremove -y && apt-get autoclean -y
 
 # install requirements.txt
 COPY ./requirements.txt ./requirements.txt
